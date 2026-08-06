@@ -1,0 +1,20 @@
+KPI,Value,Unit
+Product,EcoFit Smart Bottle,
+ForecastStartDate,2024-12-31,
+ForecastEndDate,2025-03-30,
+OpeningStock,719,units
+EndingStock,144,units
+TotalForecastDemandUsed,21642,units
+TotalFulfilledDemand,21642,units
+ServiceLevel,1.0,% fulfilled
+StockoutDays,0,days
+UnitsShort,0,units
+GeneratedPurchaseOrders,8,count
+GeneratedPOQuantity,18469,units
+EndingOpenPurchaseOrders,1,count
+EndingOpenPOQuantity,598,units
+AverageClosingStock,2107.11,units
+AverageDailyHoldingCost,46.18,currency/day
+ReorderPointUsed,1582,units
+LeadTimeDaysUsed,4,days
+ReviewPeriodDaysUsed,14,days

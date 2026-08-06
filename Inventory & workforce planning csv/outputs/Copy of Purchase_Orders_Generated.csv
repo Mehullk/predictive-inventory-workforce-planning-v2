@@ -1,0 +1,10 @@
+PO_ID,Product,PO_Date,ExpectedArrivalDate,ActualArrivalDate,OrderQuantity,Status,Source
+HIST-20241002,EcoFit Smart Bottle,2024-10-02,2024-10-07,2024-12-31,3196,Received,Historical open purchase order
+PO-20250111-002,EcoFit Smart Bottle,2025-01-11,2025-01-15,2025-01-15,2648,Received,Engine generated
+PO-20250123-003,EcoFit Smart Bottle,2025-01-23,2025-01-27,2025-01-27,2768,Received,Engine generated
+PO-20250204-004,EcoFit Smart Bottle,2025-02-04,2025-02-08,2025-02-08,3026,Received,Engine generated
+PO-20250217-005,EcoFit Smart Bottle,2025-02-17,2025-02-21,2025-02-21,3251,Received,Engine generated
+PO-20250302-006,EcoFit Smart Bottle,2025-03-02,2025-03-06,2025-03-06,3423,Received,Engine generated
+PO-20250315-007,EcoFit Smart Bottle,2025-03-15,2025-03-19,2025-03-19,2752,Received,Engine generated
+PO-20250325-008,EcoFit Smart Bottle,2025-03-25,2025-03-29,2025-03-29,3,Received,Engine generated
+PO-20250329-009,EcoFit Smart Bottle,2025-03-29,2025-04-02,,598,Open,Engine generated

@@ -1,0 +1,11 @@
+Assumption,Rule
+Starting inventory,Latest row in inventory.csv: 2024-10-05
+Demand,PredictedUnitsSold is rounded up to whole units.
+Opening stock,Opening stock equals previous day's closing stock.
+Closing stock,Opening stock + received PO quantity - forecast demand.
+Inventory position,Closing stock + open purchase order quantity.
+Lead-time demand,Sum of forecast demand over supplier lead time.
+Safety stock,Max of latest inventory SafetyStock and lead-time forecast uncertainty.
+Shortage prediction,Projected inventory after lead time below safety stock.
+PO duplicate check,"If an open PO already exists, no new PO is created."
+PO quantity,Covers lead-time demand + review-period demand + safety stock.
