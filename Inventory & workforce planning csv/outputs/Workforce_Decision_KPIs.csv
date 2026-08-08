@@ -1,0 +1,17 @@
+Metric,Value
+Planning Days,90.0
+Hiring Decisions,3.0
+Overtime Decisions,7.0
+Hybrid Decisions,0.0
+No Action Decisions,80.0
+Average Current Staff,11.64
+Average Required Workers,10.71
+Maximum Current Staff,13.0
+Maximum Required Workers,14.0
+Maximum Workforce Gap,2.0
+Average Workforce Gap,0.09
+Maximum Pending Workers,2.0
+Total Hiring Decision Cost,108000.0
+Total Overtime Decision Cost,10800.0
+Total Hybrid Decision Cost,0.0
+Total Decision Cost,118800.0

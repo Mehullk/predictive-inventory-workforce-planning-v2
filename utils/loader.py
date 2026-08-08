@@ -17,13 +17,20 @@ inventory_report = pd.read_csv(
     ROOT / "Inventory & workforce planning csv" / "outputs" / "Inventory_Planning_Report.csv"
 )
 
+
+
 workforce = pd.read_csv(
-    ROOT / "Inventory & workforce planning csv" / "outputs" / "Workforce_Planning_Report.csv"
+    ROOT / "Inventory & workforce planning csv" / "outputs" / "Workforce_Decision_Report.csv"
 )
+
+
 workforce_kpis = pd.read_csv(
-    ROOT / "Inventory & workforce planning csv" / "outputs" / "Workforce_KPIs.csv"
+    ROOT / "Inventory & workforce planning csv" / "outputs" / "Workforce_Decision_KPIs.csv"
 )
 
 workforce_assumptions = pd.read_csv(
-    ROOT / "Inventory & workforce planning csv" / "outputs" / "Workforce_Assumptions.csv"
+    ROOT / "Inventory & workforce planning csv" / "outputs" / "Workforce_Decision_Assumptions.csv"
 )
+
+print("WORKFORCE COLUMNS:")
+print(workforce.columns.tolist())

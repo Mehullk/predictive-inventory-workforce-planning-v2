@@ -272,54 +272,59 @@ def workforce_chart(df):
 
     fig = go.Figure()
 
+    # Required workforce
     fig.add_trace(
-
         go.Bar(
-
             x=df["Date"],
             y=df["RequiredWorkers"],
-
             name="Required Workers",
-
             marker_color="#F9A8D4",
-
         )
-
     )
 
+    # Current workforce
     fig.add_trace(
-
         go.Scatter(
-
             x=df["Date"],
             y=df["CurrentStaff"],
-
             mode="lines",
-
             name="Current Staff",
-
             line=dict(
-
                 color="#A855F7",
-
                 width=4,
-
-                shape="spline",
-
-                smoothing=0.6,
-
+                shape="hv",
             ),
-
         )
-
     )
 
+    # Scheduled workforce
+    if "PendingWorkers" in df.columns:
+
+        scheduled_staff = (
+            df["CurrentStaff"]
+            + df["PendingWorkers"]
+        )
+
+        fig.add_trace(
+            go.Scatter(
+                x=df["Date"],
+                y=scheduled_staff,
+                mode="lines",
+                name="Scheduled Staff",
+                line=dict(
+                    color="#22C55E",
+                    width=3,
+                    dash="dash",
+                    shape="hv",
+                ),
+            )
+        )
+
     fig.update_layout(
-
-        title="Workforce Requirement",
-
+        title="Workforce Requirement & Staffing",
         barmode="group",
-
+        yaxis_title="Workers",
+        xaxis_title="Date",
     )
 
     return apply_theme(fig)
