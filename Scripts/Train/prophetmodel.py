@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from prophet import Prophet
+from pathlib import Path
 
 from sklearn.metrics import (
     mean_absolute_error,
@@ -15,8 +16,11 @@ from sklearn.metrics import (
 os.makedirs("/Users/mehul/Downloads/PIP/Outputs", exist_ok=True)
 os.makedirs("/Users/mehul/Downloads/PIP/Models", exist_ok=True)
 
-train = pd.read_csv("/Users/mehul/Downloads/PIP/Data/processed/sales_train.csv")
-test = pd.read_csv("/Users/mehul/Downloads/PIP/Data/processed/sales_test.csv")
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROCESSED_DIR = PROJECT_ROOT / "Data" / "processed"
+
+train = pd.read_csv(PROCESSED_DIR / "sales_train.csv")
+test = pd.read_csv(PROCESSED_DIR / "sales_test.csv")
 
 train = train.rename(columns={
     "Date": "ds",
@@ -121,10 +125,10 @@ metrics.to_csv(
 
 joblib.dump(
     model,
-    "/Users/mehul/Downloads/PIP/Models/prophet_model.pkl"
+    "/Users/mehul/Downloads/PIP/Models/prophet_model2.pkl"
 )
 
 print("\nSaved:")
 print("/Users/mehul/Downloads/PIP/Outputs/Historical_Predictions.csv")
 print("/Users/mehul/Downloads/PIP/Models/model_metrics.csv")
-print("/Users/mehul/Downloads/PIP/Models/prophet_model.pkl")
+print("/Users/mehul/Downloads/PIP/Models/prophet_model2.pkl")

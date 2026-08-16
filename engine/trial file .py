@@ -5,32 +5,22 @@ import numpy as np
 import pandas as pd
 
 
-# ==========================================================
-# CONFIGURATION
-# ==========================================================
 
-PLANNING_HORIZON = 14                 # check today + next 14 days
-HIRING_LEAD_TIME = 7                  # worker joins 7 days after hiring decision
+
+PLANNING_HORIZON = 14                 
+HIRING_LEAD_TIME = 7                  
 WORKING_HOURS_PER_DAY = 8
-MAX_OVERTIME_PER_WORKER = 2           # overtime hours used for a same-day shortage
+MAX_OVERTIME_PER_WORKER = 2           
 OVERTIME_MULTIPLIER = 1.5
 
-# Hiring triggers:
-#   1) Gap >= 1 for 2 or more consecutive days
-#   2) gap >= 3 for 2 or more consecutive days
-#
-# A single isolated gap > 2 is intentionally NOT a hiring trigger.
-# It is handled as Hybrid on the shortage day.
+
 PERSISTENT_GAP_DAYS = 2
 SEVERE_GAP_THRESHOLD = 3
 SEVERE_GAP_DAYS = 2
 
-COST_EVALUATION_DAYS = 30            # days used to convert daily salary to monthly salary
+COST_EVALUATION_DAYS = 30            
 
 
-# ==========================================================
-# FILE PATHS
-# ==========================================================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -54,9 +44,7 @@ OUTPUT_KPI = OUTPUT_DIR / "Workforce_Decision_KPIs.csv"
 OUTPUT_ASSUMPTIONS = OUTPUT_DIR / "Workforce_Decision_Assumptions.csv"
 
 
-# ==========================================================
-# LOAD DATA
-# ==========================================================
+
 
 df = pd.read_csv(INPUT_FILE)
 df["Date"] = pd.to_datetime(df["Date"])
@@ -77,9 +65,6 @@ if missing:
     )
 
 
-# ==========================================================
-# BASIC HELPERS
-# ==========================================================
 
 def calculate_gap(required_workers, available_workers):
     """Positive workforce shortage only."""
@@ -147,9 +132,7 @@ def pending_workers_by_date(pending_hires, target_date):
     )
 
 
-# ==========================================================
-# COST MODEL
-# ==========================================================
+
 
 def daily_salary_per_worker(projected_labor_cost, required_workers):
     """
@@ -280,9 +263,6 @@ def hybrid_cost(gap, projected_labor_cost, required_workers):
     )
 
 
-# ==========================================================
-# GAP-RUN DETECTION
-# ==========================================================
 
 def find_positive_gap_runs(gaps):
     """
@@ -363,9 +343,7 @@ def find_severe_gap_runs(gaps):
     return runs
 
 
-# ==========================================================
-# 14-DAY LOOKAHEAD
-# ==========================================================
+
 
 def analyse_lookahead(
     dataframe,
@@ -429,23 +407,15 @@ def analyse_lookahead(
 
         month_key = date.to_period("M")
 
-        # ----------------------------------------------------------
-        # FUTURE MONTHLY RESET
-        # ----------------------------------------------------------
-        # This mirrors the actual simulation exactly:
-        # at the start of a new month, workforce returns to the
-        # default baseline, while pending hires are retained.
-        # ----------------------------------------------------------
+        
         if month_key != current_month:
 
             current_month = month_key
 
-            # Monthly reset:
-            # workforce returns to the default baseline, but pending hires
-            # already scheduled for the new month are retained.
+            
             simulated_staff = default_staff
 
-        # Apply hires whose lead time has completed.
+        
         simulated_staff, _ = apply_joining_workers(
             simulated_staff,
             simulated_pending,
@@ -476,11 +446,7 @@ def analyse_lookahead(
                 gap,
             )
 
-        # ----------------------------------------------------------
-        # Do NOT automatically create a hiring decision here.
-        # analyse_lookahead() is analysis only. Actual hiring is
-        # decided later by generate_decision().
-        # ----------------------------------------------------------
+        
 
     first_shortage_index = None
 
@@ -495,8 +461,7 @@ def analyse_lookahead(
 
             break
 
-    # Convert the simulated gap series into the run structures
-    # consumed by the hiring-decision layer.
+    
     positive_runs = find_positive_gap_runs(
         daily_gaps
     )
@@ -560,7 +525,7 @@ def choose_hiring_candidate(lookahead):
     """
     candidates = []
 
-    # Rule A: persistent shortage.
+  
     for run in lookahead["PositiveRuns"]:
         if run["length"] >= PERSISTENT_GAP_DAYS:
             candidates.append(
@@ -573,7 +538,7 @@ def choose_hiring_candidate(lookahead):
                 }
             )
 
-    # Rule B: severe shortage lasting at least 2 days.
+    
     for run in lookahead["SevereRuns"]:
         if run["length"] >= SEVERE_GAP_DAYS:
             candidates.append(
@@ -599,9 +564,7 @@ def choose_hiring_candidate(lookahead):
     return candidates[0]
 
 
-# ==========================================================
-# DECISION ENGINE
-# ==========================================================
+
 
 def generate_decision(
     dataframe,
@@ -660,10 +623,6 @@ def generate_decision(
     decision_cost = 0.0
     alternative_cost = 0.0
 
-    # ------------------------------------------------------
-    # ADVANCE HIRING
-    # ------------------------------------------------------
-
     if hiring_candidate is not None:
         first_offset = hiring_candidate["start"]
         last_offset = hiring_candidate["end"]
@@ -680,22 +639,19 @@ def generate_decision(
             (first_gap_date - current_date).days
         )
 
-        # We can only make an advance-hiring decision before
-        # the shortage begins. If the hire date has passed,
-        # the immediate shortage rules take over.
+        
         hire_window_open = (
             current_date >= recommended_hire_date
             and current_date < first_gap_date
         )
 
         if hire_window_open:
-            # Maximum shortage in the qualifying run.
+            
             target_workers = int(
                 hiring_candidate["maximum_gap"]
             )
 
-            # Existing hires that will already be present by
-            # the first shortage date reduce the new hiring need.
+            
             already_arriving = pending_workers_by_date(
                 pending_hires,
                 first_gap_date,
@@ -718,8 +674,7 @@ def generate_decision(
 
                 decision_cost = hiring_decision_cost
 
-                # Comparison against covering the maximum future
-                # gap temporarily.
+                
                 future_max_gap = target_workers
 
                 if future_max_gap <= 2:
@@ -760,9 +715,7 @@ def generate_decision(
                         f"shortage begins."
                     )
 
-    # ------------------------------------------------------
-    # SAME-DAY OVERTIME
-    # ------------------------------------------------------
+    
 
     if (
         recommended_strategy == "No Action"
@@ -793,9 +746,7 @@ def generate_decision(
                 f"overtime is recommended instead of immediate hiring."
             )
 
-        # --------------------------------------------------
-        # SAME-DAY HYBRID
-        # --------------------------------------------------
+        
 
         else:
             recommended_strategy = "Hybrid"
@@ -823,9 +774,7 @@ def generate_decision(
                 f"temporary coverage strategy is recommended."
             )
 
-    # ------------------------------------------------------
-    # FUTURE QUALIFYING SHORTAGE, BUT NOT YET HIRING DAY
-    # ------------------------------------------------------
+    
 
     if (
         recommended_strategy == "No Action"
@@ -896,10 +845,6 @@ def generate_decision(
     }
 
 
-# ==========================================================
-# INITIALISE OUTPUT
-# ==========================================================
-
 decision = df.copy()
 
 new_columns = [
@@ -940,9 +885,7 @@ for column in new_columns:
         decision[column] = 0.0
 
 
-# ==========================================================
-# RUN ENGINE
-# ==========================================================
+
 
 default_staff = int(
     df["CurrentStaff"].iloc[0]
@@ -963,36 +906,17 @@ for index in range(len(df)):
 
     month_key = current_date.to_period("M")
 
-    # ==========================================================
-    # MONTHLY WORKFORCE RESET
-    # ==========================================================
-    # Workforce planning and labour cost are intentionally treated
-    # independently for each month.
-    #
-    # At the beginning of every new month:
-    #   1. Reset actual staff to the default baseline staff.
-    #   2. Clear pending hires from the previous month.
-    #
-    # This prevents workers hired for one month from becoming
-    # permanent excess cost in the following month.
-    # ==========================================================
+    
     if current_month is None:
         current_month = month_key
 
     elif month_key != current_month:
         current_month = month_key
 
-        # Monthly reset is intentional:
-        # workforce returns to the default baseline for the new month.
-        #
-        # IMPORTANT:
-        # Do not clear pending hires here. A hire scheduled in the
-        # previous month may have been deliberately planned to become
-        # available at the beginning of this new month.
+       
         current_staff = default_staff
 
-    # Employees whose hiring lead time has completed become
-    # available today, after the monthly reset has been applied.
+    
     current_staff, _ = apply_joining_workers(
         current_staff,
         pending_hires,
@@ -1006,8 +930,7 @@ for index in range(len(df)):
         pending_hires,
     )
 
-    # If today is the hiring decision date, schedule the
-    # workers to join exactly 7 days from today.
+    
     if (
         result["RecommendedStrategy"] == "Hiring"
         and result["WorkersToHire"] > 0
@@ -1066,9 +989,7 @@ for index in range(len(df)):
     ]
 
 
-# ==========================================================
-# KPI REPORT
-# ==========================================================
+
 
 decision_kpis = pd.DataFrame(
     {
@@ -1158,9 +1079,7 @@ decision_kpis = pd.DataFrame(
 )
 
 
-# ==========================================================
-# MODEL ASSUMPTIONS
-# ==========================================================
+
 
 decision_assumptions = pd.DataFrame(
     {
@@ -1198,9 +1117,7 @@ decision_assumptions = pd.DataFrame(
 )
 
 
-# ==========================================================
-# SAVE OUTPUTS
-# ==========================================================
+
 
 decision.to_csv(
     OUTPUT_REPORT,
@@ -1217,10 +1134,6 @@ decision_assumptions.to_csv(
     index=False,
 )
 
-
-# ==========================================================
-# CONSOLE REPORT
-# ==========================================================
 
 print()
 print("=" * 60)

@@ -21,9 +21,7 @@ def forecast_page():
 
     metrics = executive_metrics()
 
-    # ============================================================
-    # PAGE-SPECIFIC STYLING
-    # ============================================================
+    
 
     st.markdown(
         """
@@ -210,18 +208,10 @@ def forecast_page():
         unsafe_allow_html=True,
     )
 
-    # ============================================================
-    # PAGE HEADER
-    # ============================================================
-
     section_title(
         "Sales Forecast",
         "Prophet model predictions with confidence intervals",
     )
-
-    # ============================================================
-    # KPI SUMMARY
-    # ============================================================
 
     c1, c2, c3 = st.columns(3)
 
@@ -231,7 +221,7 @@ def forecast_page():
             f"{metrics['accuracy']:.2f}%",
             "Model Performance",
             "#22C55E",
-            "🎯",
+            
         )
 
     with c2:
@@ -240,7 +230,7 @@ def forecast_page():
             f"{int(metrics['sales30']):,}",
             "Predicted Units",
             "#3B82F6",
-            "📅",
+            
         )
 
     with c3:
@@ -249,17 +239,44 @@ def forecast_page():
             f"{int(metrics['sales90']):,}",
             "Predicted Units",
             "#F59E0B",
-            "📈",
+            
         )
 
-    # ============================================================
-    # KPI KNOWLEDGE BOX
-    # ============================================================
+
+    d1, d2, d3 = st.columns(3)
+
+    with d1:
+        kpi_card(
+            "Average Daily Demand",
+            f"{metrics['average_daily_demand']:.2f}",
+            "Forecasted units per day",
+            "#B8DBFC",
+            
+        )
+
+    with d2:
+        kpi_card(
+            "Forecast Start",
+            metrics["forecast_start"],
+            "First forecast date",
+            "#D9F5E7",
+            
+        )
+
+    with d3:
+        kpi_card(
+            "Forecast End",
+            metrics["forecast_end"],
+            "Last forecast date",
+            "#E9D5FF",
+            
+        )
+
 
     st.markdown("---")
 
     with st.expander(
-        "ℹ️ What do these forecast KPIs mean?"
+        " What do these forecast KPIs mean?"
     ):
 
         st.markdown(
@@ -287,17 +304,10 @@ inventory and workforce decisions.
 """
         )
 
-    # ============================================================
-    # SALES FORECAST
-    # ============================================================
 
     st.markdown("---")
 
     st.subheader("Sales Forecast")
-
-    # ============================================================
-    # 90-DAY FORECAST — DEFAULT
-    # ============================================================
 
     tab1, tab2 = st.tabs([
         "90-Day Forecast",
@@ -325,9 +335,6 @@ inventory and workforce decisions.
             hide_index=True,
         )
 
-    # ============================================================
-    # 30-DAY FORECAST
-    # ============================================================
 
     with tab2:
 
@@ -366,14 +373,11 @@ inventory and workforce decisions.
             hide_index=True,
         )
 
-    # ============================================================
-    # FORECAST CONCEPTS
-    # ============================================================
 
     st.markdown("---")
 
     with st.expander(
-        "📘 Forecasting Concepts"
+        " Forecasting Concepts"
     ):
 
         st.markdown(
@@ -406,10 +410,6 @@ The demand forecast therefore becomes the common planning input
 for downstream operational decisions.
 """
         )
-
-    # ============================================================
-    # FORECAST PROCESS
-    # ============================================================
 
     st.markdown("---")
 
@@ -480,9 +480,6 @@ for downstream operational decisions.
             unsafe_allow_html=True,
         )
 
-    # ============================================================
-    # FINAL FORECAST INTERPRETATION
-    # ============================================================
 
     st.markdown("---")
 

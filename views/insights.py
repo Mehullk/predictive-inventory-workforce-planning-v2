@@ -12,9 +12,6 @@ def insights_page():
 
     metrics = executive_metrics()
 
-    # ============================================================
-    # PAGE-SPECIFIC STYLING
-    # ============================================================
 
     st.markdown(
         """
@@ -100,18 +97,11 @@ def insights_page():
         unsafe_allow_html=True,
     )
 
-    # ============================================================
-    # PAGE HEADER
-    # ============================================================
-
     section_title(
         "Executive Insights",
         "Business intelligence generated from forecasting, inventory, and workforce planning",
     )
 
-    # ============================================================
-    # EXECUTIVE KPIs
-    # ============================================================
 
     workforce_gap = int(metrics["workforce_gap"])
 
@@ -124,7 +114,7 @@ def insights_page():
             f"{metrics['accuracy']:.2f}%",
             "Model performance",
             "#22C55E",
-            "🎯",
+            
         )
 
     with c2:
@@ -134,7 +124,7 @@ def insights_page():
             f"{metrics['service_level']:.1f}%",
             "Demand fulfilled",
             "#22C55E",
-            "⭐",
+            
         )
 
     with c3:
@@ -144,7 +134,7 @@ def insights_page():
             f"{int(metrics['sales90']):,}",
             "Predicted units",
             "#3B82F6",
-            "📈",
+            
         )
 
     with c4:
@@ -166,16 +156,13 @@ def insights_page():
             f"{workforce_gap}",
             gap_text,
             gap_color,
-            "👥",
+            
         )
 
-    # ============================================================
-    # KPI KNOWLEDGE BOX
-    # ============================================================
 
     st.markdown("---")
 
-    with st.expander("ℹ️ What do these executive KPIs mean?"):
+    with st.expander(" What do these executive KPIs mean?"):
 
         st.markdown(
             """
@@ -230,9 +217,6 @@ is required at the point of maximum shortage.
 """
     )
 
-    # ============================================================
-    # HOW TO INTERPRET THE SYSTEM
-    # ============================================================
 
     st.markdown("---")
 
@@ -297,10 +281,6 @@ is required at the point of maximum shortage.
             unsafe_allow_html=True,
         )
 
-    # ============================================================
-    # DECISION KNOWLEDGE BOX
-    # ============================================================
-
     with st.expander("📘 How the Decision System Works"):
 
         st.markdown(
@@ -347,9 +327,6 @@ needed to support operational planning.
 """
         )
 
-    # ============================================================
-    # BUSINESS RECOMMENDATIONS
-    # ============================================================
 
     st.markdown("---")
 
@@ -357,9 +334,6 @@ needed to support operational planning.
 
     recommendations = []
 
-    # ------------------------------------------------------------
-    # Inventory recommendation
-    # ------------------------------------------------------------
 
     if metrics["service_level"] >= 100:
 
@@ -393,14 +367,10 @@ needed to support operational planning.
             "policies."
         )
 
-    # ------------------------------------------------------------
-    # Workforce recommendation
-    # ------------------------------------------------------------
-
     if workforce_gap > 0:
 
         recommendations.append(
-            f"👷 **Workforce:** A maximum shortage of "
+            f" **Workforce:** A maximum shortage of "
             f"**{workforce_gap} worker(s)** is projected. Review the "
             "Workforce Action Plan to determine whether the engine "
             "recommends hiring, overtime or hybrid coverage."
@@ -421,9 +391,6 @@ needed to support operational planning.
             "maximum projected requirement."
         )
 
-    # ------------------------------------------------------------
-    # Forecast recommendation
-    # ------------------------------------------------------------
 
     if metrics["accuracy"] >= 90:
 
@@ -454,9 +421,6 @@ needed to support operational planning.
             f"- {recommendation}"
         )
 
-    # ============================================================
-    # OVERALL ASSESSMENT
-    # ============================================================
 
     st.markdown("---")
 
@@ -495,10 +459,6 @@ needed to support operational planning.
             "🔴 **Operational Health: Needs Attention** — "
             "One or more major planning indicators require review."
         )
-
-    # ============================================================
-    # FINAL NOTE
-    # ============================================================
 
     st.markdown("---")
 

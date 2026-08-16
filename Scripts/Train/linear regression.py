@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+from pathlib import Path
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import (
     mean_absolute_error,
@@ -11,8 +12,11 @@ from sklearn.metrics import (
 )
 
 
-train = pd.read_csv("train_test/train_dataset.csv")
-test = pd.read_csv("train_test/test_dataset.csv")
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROCESSED_DIR = PROJECT_ROOT / "Data" / "processed"
+
+train = pd.read_csv(PROCESSED_DIR / "sales_train.csv")
+test = pd.read_csv(PROCESSED_DIR / "sales_test.csv")
 
 
 feature_columns = [

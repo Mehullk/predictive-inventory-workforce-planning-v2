@@ -2,17 +2,21 @@ import pandas as pd
 import numpy as np
 
 from catboost import CatBoostRegressor
+from pathlib import Path
 from sklearn.metrics import (
     mean_absolute_error,
     mean_squared_error,
     mean_absolute_percentage_error,
     r2_score,
-    adjusted_rand_score
+    
 )
 
 
-train = pd.read_csv("train_test/train_dataset.csv")
-test = pd.read_csv("train_test/test_dataset.csv")
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROCESSED_DIR = PROJECT_ROOT / "Data" / "processed"
+
+train = pd.read_csv(PROCESSED_DIR / "sales_train.csv")
+test = pd.read_csv(PROCESSED_DIR / "sales_test.csv")
 
 feature_columns = [
     "DayOfWeek",

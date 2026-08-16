@@ -1,121 +1,63 @@
+from pathlib import Path
 import pandas as pd
-import joblib
-from prophet import Prophet
 
-df = pd.read_csv("/Users/mehul/Downloads/PIP/Data/processed/sales_feature_engineered.csv")
 
-df = df.rename(columns={
-    "Date": "ds",
-    "UnitsSold": "y"
-})
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-df["ds"] = pd.to_datetime(df["ds"])
-
-split = int(len(df) * 0.92)
-
-train = df.iloc[:split].copy()
-
-features = [
-    "MarketingSpend_lag1",
-    "WebSearchInterest_lag2",
-    "IsPromo",
-    "IsHoliday"
-]
-
-model = Prophet(
-    growth="linear",
-    seasonality_mode="multiplicative",
-    changepoint_prior_scale=0.03,
-    seasonality_prior_scale=10,
-    holidays_prior_scale=10,
-    yearly_seasonality=True,
-    weekly_seasonality=True,
-    daily_seasonality=False,
-    #interval_width=0.80
+SOURCE_FORECAST = (
+    BASE_DIR
+    / "outputs"
+    / "forecast_90_days_direct.csv"
 )
 
-model.add_seasonality(
-    name="monthly",
-    period=30.5,
-    fourier_order=5
+OUTPUT_FORECAST = (
+    BASE_DIR
+    / "outputs"
+    / "forecast_30_days.csv"
 )
 
-model.add_seasonality(
-    name="quarterly",
-    period=91.25,
-    fourier_order=5
+forecast_90 = pd.read_csv(
+    SOURCE_FORECAST,
+    parse_dates=["Date"]
 )
 
-for feature in features:
-    model.add_regressor(feature)
-
-model.fit(train[["ds", "y"] + features])
-
-future = pd.read_csv(
-    "/Users/mehul/Downloads/PIP/Outputs/future_regressors_30_days.csv"
+forecast_90 = (
+    forecast_90
+    .sort_values("Date")
+    .reset_index(drop=True)
 )
 
-future = future.rename(columns={"Date": "ds"})
-future["ds"] = pd.to_datetime(future["ds"])
-
-forecast = model.predict(future)
-
-metrics = pd.read_csv(
-    "/Users/mehul/Downloads/PIP/Models/model_metrics.csv"
-)
-
-historical_accuracy = float(metrics.loc[0, "ForecastAccuracy"])
-
-result = forecast[
-    [
-        "ds",
-        "yhat",
-        "yhat_lower",
-        "yhat_upper"
-    ]
-].copy()
-
-result.columns = [
-    "Date",
-    "Forecast",
-    "Lower95CI",
-    "Upper95CI"
-]
-
-result["CI_Width"] = result["Upper95CI"] - result["Lower95CI"]
-
-result["RelativeUncertainty"] = (
-    result["CI_Width"] /
-    (2 * result["Forecast"].abs())
-)
-
-result["DerivedConfidence"] = (
-    historical_accuracy *
-    (
-        1 - result["RelativeUncertainty"]
+if len(forecast_90) != 90:
+    raise ValueError(
+        f"Expected exactly 90 forecast rows, found {len(forecast_90)}"
     )
-)
 
-result["DerivedConfidence"] = (
-    result["DerivedConfidence"]
-    .clip(lower=0, upper=100)
-    .round(2)
-)
+forecast_30 = forecast_90.iloc[:30].copy()
 
-result = result.drop(columns=["RelativeUncertainty"])
-
-result.to_csv(
-    "/Users/mehul/Downloads/PIP/Outputs/forecast_30_days.csv",
+forecast_30.to_csv(
+    OUTPUT_FORECAST,
     index=False
 )
 
-joblib.dump(
-    model,
-    "/Users/mehul/Downloads/PIP/Models/prophet_model.pkl"
+print("=" * 60)
+print("30-DAY FORECAST GENERATED FROM 90-DAY FORECAST")
+print("=" * 60)
+print(
+    f"Forecast start : {forecast_30['Date'].min().date()}"
 )
-
-print(result)
-
-print()
-print("Saved:")
-print("/Users/mehul/Downloads/PIP/Outputs/forecast_30_days.csv")
+print(
+    f"Forecast end   : {forecast_30['Date'].max().date()}"
+)
+print(
+    f"Forecast days  : {len(forecast_30)}"
+)
+print(
+    f"30-day demand  : {forecast_30['Forecast'].sum():.2f}"
+)
+print(
+    f"90-day demand  : {forecast_90['Forecast'].sum():.2f}"
+)
+print(
+    f"Saved to       : {OUTPUT_FORECAST}"
+)
+print("=" * 60)

@@ -17,6 +17,9 @@ inventory_report = pd.read_csv(
     ROOT / "Inventory & workforce planning csv" / "outputs" / "Inventory_Planning_Report.csv"
 )
 
+purchase_orders = pd.read_csv(
+    ROOT / "Inventory & workforce planning csv" / "outputs" / "Copy of Purchase_Orders_Generated.csv"
+)
 
 
 workforce = pd.read_csv(

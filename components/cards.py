@@ -10,7 +10,7 @@ def section_title(title: str, subtitle: str = ""):
     st.write("")
 
 
-def kpi_card(title, value, delta=None, delta_color="normal", icon="📊"):
+def kpi_card(title, value, delta=None, delta_color="normal" ):
 
     with st.container(border=True):
 
@@ -78,7 +78,7 @@ def kpi_card(title, value, delta=None, delta_color="normal", icon="📊"):
                     font-size:44px;
                     margin-top:8px;
                 ">
-                    {icon}
+                    
                 </div>
                 """,
                 unsafe_allow_html=True

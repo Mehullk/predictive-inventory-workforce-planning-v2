@@ -6,10 +6,15 @@ from sklearn.metrics import (
     mean_squared_error,
     mean_absolute_percentage_error,
     r2_score,
-    adjusted_rand_score
+    
 )
 
-df = pd.read_csv("data/sales_feature_engineered.csv")
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROCESSED_DIR = PROJECT_ROOT / "Data" / "processed"
+
+df = pd.read_csv(PROCESSED_DIR / "sales_feature_engineered.csv")
 
 split_index = int(len(df) * 0.92)
 

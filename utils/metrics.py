@@ -7,14 +7,12 @@ from utils.loader import (
     inventory_kpis,
     workforce,
     workforce_kpis,
+    purchase_orders,
 )
 
 
 def executive_metrics():
 
-    # ============================================================
-    # FORECAST METRICS
-    # ============================================================
 
     accuracy = float(
         metrics["ForecastAccuracy"].iloc[0]
@@ -29,9 +27,7 @@ def executive_metrics():
     )
 
 
-    # ============================================================
-    # INVENTORY METRICS
-    # ============================================================
+  
 
     inventory = (
         inventory_kpis
@@ -39,19 +35,13 @@ def executive_metrics():
     )
 
 
-    # ============================================================
-    # WORKFORCE METRICS
-    # ============================================================
-
+    
     workforce_metrics = (
         workforce_kpis
         .set_index("Metric")["Value"]
     )
 
 
-    # ------------------------------------------------------------
-    # Basic workforce values
-    # ------------------------------------------------------------
 
     workers = int(
         workforce["RequiredWorkers"].max()
@@ -62,9 +52,7 @@ def executive_metrics():
     )
 
 
-    # ------------------------------------------------------------
-    # Workforce gap
-    # ------------------------------------------------------------
+ 
 
     if "WorkforceGap" in workforce.columns:
 
@@ -95,9 +83,7 @@ def executive_metrics():
         )
 
 
-    # ------------------------------------------------------------
-    # Decision counts
-    # ------------------------------------------------------------
+    
 
     if "RecommendedStrategy" in workforce.columns:
 
@@ -157,9 +143,7 @@ def executive_metrics():
         )
 
 
-    # ------------------------------------------------------------
-    # Pending workers
-    # ------------------------------------------------------------
+    
 
     if "PendingWorkers" in workforce.columns:
 
@@ -184,14 +168,9 @@ def executive_metrics():
         )
 
 
-    # ============================================================
-    # DECISION COSTS
-    # ============================================================
+    
 
-    # IMPORTANT:
-    # Calculate these from the actual Workforce Decision Report.
-    # This prevents the dashboard from showing ₹0 when the
-    # decision table contains real costs.
+    
 
     if "DecisionCost" in workforce.columns:
 
@@ -266,9 +245,7 @@ def executive_metrics():
         )
 
 
-    # ============================================================
-    # ESTIMATED SAVING
-    # ============================================================
+   
 
     estimated_saving = workforce_metrics.get(
         "Total Estimated Saving",
@@ -276,9 +253,6 @@ def executive_metrics():
     )
 
 
-    # ============================================================
-    # WORKFORCE UTILIZATION
-    # ============================================================
 
     utilization = workforce_metrics.get(
         "Average Worker Utilization",
@@ -289,9 +263,7 @@ def executive_metrics():
     )
 
 
-    # ============================================================
-    # INVENTORY VALUES
-    # ============================================================
+   
 
     opening_stock = float(
         inventory["OpeningStock"]
@@ -305,31 +277,73 @@ def executive_metrics():
         inventory["ServiceLevel"]
     ) * 100
 
-    purchase_orders = float(
+    purchase_orders_count = float(
         inventory["GeneratedPurchaseOrders"]
     )
 
 
-    # ============================================================
-    # FINAL METRICS
-    # ============================================================
+   
+
+    forecast_dates = pd.to_datetime(
+        forecast90["Date"],
+        errors="coerce"
+    ).dropna()
+
+    forecast_start = (
+        forecast_dates.min().strftime("%d %b %Y")
+        if not forecast_dates.empty
+        else "N/A"
+    )
+
+    forecast_end = (
+        forecast_dates.max().strftime("%d %b %Y")
+        if not forecast_dates.empty
+        else "N/A"
+    )
+
+    average_daily_demand = (
+        float(forecast90["PredictedUnitsSold"].mean())
+        if "PredictedUnitsSold" in forecast90.columns and not forecast90.empty
+        else 0.0
+    )
+
+    
+    engine_po_dates = pd.to_datetime(
+        purchase_orders.loc[
+            purchase_orders["Source"].astype(str).str.strip().eq("Engine generated"),
+            "PO_Date"
+        ],
+        errors="coerce"
+    ).dropna().sort_values()
+
+    if len(engine_po_dates) >= 2:
+        average_days_between_orders = float(
+            engine_po_dates.diff().dt.days.dropna().mean()
+        )
+    else:
+        average_days_between_orders = 0.0
+
+
+ 
 
     return {
 
-        # --------------------------------------------------------
-        # Forecast
-        # --------------------------------------------------------
-
+       
         "accuracy": accuracy,
 
         "sales30": sales30,
 
         "sales90": sales90,
 
+        "average_daily_demand": average_daily_demand,
 
-        # --------------------------------------------------------
-        # Workforce
-        # --------------------------------------------------------
+        "forecast_start": forecast_start,
+
+        "forecast_end": forecast_end,
+
+        "average_days_between_orders": average_days_between_orders,
+
+
 
         "workers": workers,
 
@@ -370,9 +384,7 @@ def executive_metrics():
         "utilization": utilization,
 
 
-        # --------------------------------------------------------
-        # Inventory
-        # --------------------------------------------------------
+      
 
         "opening_stock": opening_stock,
 
@@ -380,6 +392,6 @@ def executive_metrics():
 
         "service_level": service_level,
 
-        "purchase_orders": purchase_orders,
+        "purchase_orders": purchase_orders_count,
 
     }

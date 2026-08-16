@@ -21,9 +21,7 @@ def workforce_page():
 
     metrics = executive_metrics()
 
-    # ============================================================
-    # PAGE-SPECIFIC STYLING
-    # ============================================================
+   
 
     st.markdown(
         """
@@ -109,19 +107,14 @@ def workforce_page():
         unsafe_allow_html=True,
     )
 
-    # ============================================================
-    # PAGE HEADER
-    # ============================================================
+    
 
     section_title(
         "Workforce Planning",
         "AI-assisted workforce requirement and decision planning",
     )
 
-    # ============================================================
-    # KPI CARDS
-    # ============================================================
-
+    
     c1, c2, c3, c4 = st.columns(4)
 
     with c1:
@@ -131,7 +124,7 @@ def workforce_page():
             f"{int(metrics['staff'])}",
             "Available Workforce",
             "#3B82F6",
-            "👥",
+            
         )
 
     with c2:
@@ -141,7 +134,7 @@ def workforce_page():
             f"{int(metrics['workers'])}",
             "Maximum Required",
             "#F59E0B",
-            "👷",
+            
         )
 
     with c3:
@@ -165,7 +158,7 @@ def workforce_page():
             f"{gap}",
             delta,
             color,
-            "⚖️",
+            
         )
 
     with c4:
@@ -179,16 +172,14 @@ def workforce_page():
             f"{no_action}",
             "No intervention required",
             "#22C55E",
-            "✅",
+            
         )
 
-    # ============================================================
-    # KPI KNOWLEDGE BOX
-    # ============================================================
+   
 
     st.markdown("---")
 
-    with st.expander("ℹ️ What do these workforce KPIs mean?"):
+    with st.expander(" What do these workforce KPIs mean?"):
 
         st.markdown(
             """
@@ -221,9 +212,7 @@ capacity and potential shortages.
 """
         )
 
-    # ============================================================
-    # WORKFORCE TREND
-    # ============================================================
+   
 
     st.markdown("---")
 
@@ -240,13 +229,11 @@ capacity and potential shortages.
         use_container_width=True,
     )
 
-    # ============================================================
-    # WORKFORCE ACTION PLAN
-    # ============================================================
+ 
 
     st.markdown("---")
 
-    st.subheader("📋 Workforce Action Plan")
+    st.subheader(" Workforce Action Plan")
 
     st.caption(
         "Dates where the decision engine recommends an intervention. "
@@ -254,7 +241,7 @@ capacity and potential shortages.
         "and when the workforce change takes effect."
     )
 
-    # Keep only actionable decisions.
+    
     action_plan = workforce[
         workforce["RecommendedStrategy"].isin(
             ["Hiring", "Overtime", "Hybrid"]
@@ -270,9 +257,7 @@ capacity and potential shortages.
 
     else:
 
-        # ========================================================
-        # PREPARE MANAGEMENT-FACING TABLE
-        # ========================================================
+       
 
         action_plan["Date"] = (
             action_plan["Date"]
@@ -296,9 +281,7 @@ capacity and potential shortages.
                 .str[:10]
             )
 
-        # ========================================================
-        # FINAL MANAGEMENT TABLE
-        # ========================================================
+       
 
         display_columns = [
             "Date",
@@ -322,9 +305,7 @@ capacity and potential shortages.
 
         action_table = action_plan[display_columns].copy()
 
-                # ========================================================
-        # CREATE COMPACT MANAGEMENT-FACING REASON
-        # ========================================================
+                
 
         def compact_reason(row):
 
@@ -394,9 +375,7 @@ capacity and potential shortages.
             }
         )
 
-        # ========================================================
-        # FORMAT NUMERIC COLUMNS
-        # ========================================================
+    
 
         for column in [
             "Required Staff",
@@ -413,9 +392,7 @@ capacity and potential shortages.
                     .astype(int)
                 )
 
-        # ========================================================
-        # FORMAT DATES
-        # ========================================================
+     
 
         for column in [
             "First Shortage",
@@ -437,9 +414,7 @@ capacity and potential shortages.
                     .str[:10]
                 )
 
-        # ========================================================
-        # FORMAT DECISION COST
-        # ========================================================
+     
 
         if "Decision Cost" in action_table.columns:
 
@@ -454,9 +429,7 @@ capacity and potential shortages.
                 )
             )
 
-        # ========================================================
-        # DISPLAY TABLE
-        # ========================================================
+       
 
         st.dataframe(
             action_table,
@@ -520,10 +493,7 @@ capacity and potential shortages.
             },
         )
 
-        # ========================================================
-        # HOW TO READ THE TABLE
-        # ========================================================
-
+        
         st.info(
             """
     ### How to read this table
@@ -544,9 +514,6 @@ capacity and potential shortages.
     """
         )
 
-    # ============================================================
-    # WORKFORCE PLANNING CONCEPTS
-    # ============================================================
 
     with st.expander("📘 Workforce Planning Concepts"):
 
@@ -607,9 +574,7 @@ depending on the shortage characteristics and planning rules.
 """
         )
 
-    # ============================================================
-    # STRATEGY SUMMARY
-    # ============================================================
+    
 
     st.markdown("---")
 
@@ -626,7 +591,7 @@ depending on the shortage characteristics and planning rules.
             f"{int(metrics['hiring_decisions'])}",
             "Hiring recommended",
             "#EF4444",
-            "👤",
+            
         )
 
     with s2:
@@ -636,7 +601,7 @@ depending on the shortage characteristics and planning rules.
             f"{int(metrics['overtime_decisions'])}",
             "Temporary coverage",
             "#F59E0B",
-            "⏱️",
+            
         )
 
     with s3:
@@ -646,7 +611,7 @@ depending on the shortage characteristics and planning rules.
             f"{int(metrics['hybrid_decisions'])}",
             "Hiring + overtime",
             "#8B5CF6",
-            "🔄",
+            
         )
 
     with s4:
@@ -656,12 +621,10 @@ depending on the shortage characteristics and planning rules.
             f"{int(metrics['pending_workers'])}",
             "Maximum scheduled",
             "#3B82F6",
-            "📋",
+            
         )
 
-    # ============================================================
-    # DECISION COST SUMMARY
-    # ============================================================
+  
 
     st.markdown("---")
 
@@ -678,7 +641,7 @@ depending on the shortage characteristics and planning rules.
             f"₹{metrics['average_hiring_cost']:,.0f}",
             "Per decision",
             "#EF4444",
-            "💼",
+            
         )
 
     with c2:
@@ -688,7 +651,7 @@ depending on the shortage characteristics and planning rules.
             f"₹{metrics['average_overtime_cost']:,.0f}",
             "Per decision",
             "#F59E0B",
-            "⏱️",
+            
         )
 
     with c3:
@@ -698,12 +661,10 @@ depending on the shortage characteristics and planning rules.
             f"₹{metrics['average_hybrid_cost']:,.0f}",
             "Per decision",
             "#8B5CF6",
-            "🔄",
+            
         )
 
-    # ============================================================
-    # RECOMMENDATION
-    # ============================================================
+    
 
     st.markdown("---")
 
@@ -776,14 +737,12 @@ For the latest forecasted date, the available workforce is sufficient.
 """
         )
 
-    # ============================================================
-    # DECISION REPORT
-    # ============================================================
+
 
     st.markdown("---")
 
     st.subheader(
-        "🔍 Detailed Workforce Analysis"
+        " Detailed Workforce Analysis"
     )
 
     st.caption(

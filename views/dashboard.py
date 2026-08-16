@@ -137,7 +137,7 @@ def _render_workforce_decision_summary(metrics):
             f"{int(metrics['staff'])}",
             "Starting workforce",
             "#B8DBFC",
-            "👥",
+            
         )
 
     with k2:
@@ -146,7 +146,7 @@ def _render_workforce_decision_summary(metrics):
             f"{int(metrics['workers'])}",
             "Maximum workers needed",
             "#FFF7C7",
-            "👷",
+            
         )
 
     with k3:
@@ -164,7 +164,7 @@ def _render_workforce_decision_summary(metrics):
             f"{gap}",
             gap_label,
             "#FFE3E3" if gap > 0 else "#D9F5E7",
-            "⚖️",
+            
         )
 
     with k4:
@@ -173,7 +173,7 @@ def _render_workforce_decision_summary(metrics):
             f"₹{total_cost:,.0f}",
             "Workforce strategy cost",
             "#E9D5FF",
-            "💰",
+            
         )
 
     # ============================================================
@@ -481,7 +481,7 @@ have been identified across the planning horizon.
             # DISPLAY
             # ========================================================
 
-            st.markdown("#### 📋 Workforce Action Plan")
+            st.markdown("####  Workforce Action Plan")
 
             st.caption(
                 "Only dates requiring a workforce intervention are shown. "
@@ -606,7 +606,7 @@ def dashboard_page():
             f"{int(metrics['sales90']):,}",
             "Forecasted units",
             "#B8DBFC",
-            "📈",
+            
         )
 
     with c2:
@@ -615,7 +615,7 @@ def dashboard_page():
             f"{metrics['service_level']:.1f}%",
             "Inventory status",
             "#D9F5E7",
-            "📦",
+            
         )
 
     with c3:
@@ -624,7 +624,7 @@ def dashboard_page():
             f"{int(metrics['workforce_gap'])}",
             "Maximum projected shortage",
             "#FFF7C7",
-            "⚠️",
+            
         )
 
     with c4:
@@ -633,7 +633,7 @@ def dashboard_page():
             f"₹{_total_decision_cost():,.0f}",
             "Workforce decision output",
             "#E9D5FF",
-            "💰",
+            
         )
 
     st.markdown(
@@ -670,7 +670,7 @@ def dashboard_page():
             f"{metrics['accuracy']:.2f}%",
             "Model performance",
             "#D9F5E7",
-            "🎯",
+            
         )
 
     with f2:
@@ -679,7 +679,7 @@ def dashboard_page():
             f"{int(metrics['sales30']):,}",
             "Near-term forecast",
             "#B8DBFC",
-            "📅",
+            
         )
 
     with f3:
@@ -688,7 +688,7 @@ def dashboard_page():
             f"{int(metrics['sales90']):,}",
             "Planning horizon",
             "#E9D5FF",
-            "📈",
+            
         )
 
     st.plotly_chart(
@@ -714,7 +714,7 @@ def dashboard_page():
             f"{int(metrics['opening_stock']):,}",
             "Planning-period opening",
             "#B8DBFC",
-            "📦",
+            
         )
 
     with i2:
@@ -723,7 +723,7 @@ def dashboard_page():
             f"{int(metrics['ending_stock']):,}",
             "Projected ending position",
             "#D9F5E7",
-            "🏭",
+            
         )
 
     with i3:
@@ -732,7 +732,7 @@ def dashboard_page():
             f"{metrics['service_level']:.1f}%",
             "Target inventory service",
             "#D9F5E7",
-            "⭐",
+            
         )
 
     with i4:
@@ -741,7 +741,7 @@ def dashboard_page():
             f"{int(metrics['purchase_orders'])}",
             "Generated orders",
             "#FFF7C7",
-            "🛒",
+            
         )
 
     st.plotly_chart(

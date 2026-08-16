@@ -21,9 +21,7 @@ def inventory_page():
 
     metrics = executive_metrics()
 
-    # ============================================================
-    # PAGE-SPECIFIC STYLING
-    # ============================================================
+ 
 
     st.markdown(
         """
@@ -109,60 +107,61 @@ def inventory_page():
         unsafe_allow_html=True,
     )
 
-    # ============================================================
-    # PAGE HEADER
-    # ============================================================
+   
 
     section_title(
         "Inventory Planning",
         "90-day inventory planning based on forecasted demand",
     )
 
-    # ============================================================
-    # KPI SUMMARY
-    # ============================================================
+   
 
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3, c4, c5 = st.columns(5)
 
     with c1:
-        kpi_card(
-            "Opening Stock",
-            f"{int(metrics['opening_stock']):,}",
-            "Units available at start",
-            icon="📦",
-        )
+            kpi_card(
+                "Opening Stock",
+                f"{int(metrics['opening_stock']):,}",
+                "Units available at start",
+                "#3B82F6",
+            )
 
     with c2:
-        kpi_card(
-            "Ending Stock",
-            f"{int(metrics['ending_stock']):,}",
-            "Units remaining at end",
-            icon="🏭",
-        )
+            kpi_card(
+                "Ending Stock",
+                f"{int(metrics['ending_stock']):,}",
+                "Units remaining at end",
+                "#6366F1",
+            )
 
     with c3:
-        kpi_card(
-            "Service Level",
-            f"{metrics['service_level']:.1f}%",
-            "Demand fulfilled",
-            icon="⭐",
-        )
+            kpi_card(
+                "Service Level",
+                f"{metrics['service_level']:.1f}%",
+                "Demand fulfilled",
+                "#22C55E",
+            )
 
     with c4:
-        kpi_card(
-            "Purchase Orders",
-            f"{int(metrics['purchase_orders'])}",
-            "Replenishment orders",
-            icon="🛒",
-        )
+            kpi_card(
+                "Purchase Orders",
+                f"{int(metrics['purchase_orders'])}",
+                "Replenishment orders",
+                "#F59E0B",
+            )
 
-    # ============================================================
-    # KPI EXPLANATION
-    # ============================================================
+    with c5:
+            kpi_card(
+                "Avg. Days Between Orders",
+                f"{metrics['average_days_between_orders']:.0f} days",
+                "Engine-generated replenishment",
+                "#8B5CF6",
+            )
+  
 
     st.markdown("---")
 
-    with st.expander("ℹ️ What do these inventory KPIs mean?"):
+    with st.expander(" What do these inventory KPIs mean?"):
 
         st.markdown(
             """
@@ -193,9 +192,7 @@ engine when additional stock is required.
 """
         )
 
-    # ============================================================
-    # INVENTORY TREND
-    # ============================================================
+    
 
     st.markdown("---")
 
@@ -211,9 +208,7 @@ engine when additional stock is required.
         use_container_width=True,
     )
 
-    # ============================================================
-    # HOW THE INVENTORY PLAN WORKS
-    # ============================================================
+  
 
     st.markdown("---")
 
@@ -284,7 +279,7 @@ engine when additional stock is required.
 
     st.markdown("---")
 
-    with st.expander("📘 Inventory Planning Concepts"):
+    with st.expander(" Inventory Planning Concepts"):
 
         st.markdown(
             """
@@ -316,9 +311,7 @@ waiting until a stockout occurs.
 """
         )
 
-    # ============================================================
-    # INVENTORY DATA
-    # ============================================================
+   
 
     st.markdown("---")
 
@@ -352,9 +345,7 @@ waiting until a stockout occurs.
             hide_index=True,
         )
 
-    # ============================================================
-    # FINAL INTERPRETATION
-    # ============================================================
+    
 
     st.markdown("---")
 
