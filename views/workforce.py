@@ -111,7 +111,7 @@ def workforce_page():
 
     section_title(
         "Workforce Planning",
-        "AI-assisted workforce requirement and decision planning",
+        
     )
 
     
