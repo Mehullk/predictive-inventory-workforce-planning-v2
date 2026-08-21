@@ -11,11 +11,11 @@ def render_sidebar():
             <div style="padding-top:10px;padding-bottom:20px;">
 
             <div class="brand-title">
-            📊 Predictive AI
+            📊 Forecasted Demand
             </div>
 
             <div class="brand-subtitle">
-            Inventory & Workforce Planning
+            Optimized Inventory & Workforce Planning System
             </div>
 
             </div>
