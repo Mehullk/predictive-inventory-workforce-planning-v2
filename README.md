@@ -59,3 +59,7 @@ The project is organized into modules for:
 The goal of the system is to move from **prediction to operational decision-making** by connecting demand forecasts with inventory replenishment and workforce planning.
 
 **Forecast Demand → Inventory Planning → Workforce Planning → Business Decisions**
+
+
+## To access Dashboard 
+https://predictive-inventory-workforce-planning-v2.streamlit.app/
